@@ -37,3 +37,17 @@ There are no build commands. Edit `index.html` directly and open it in a browser
 
 - The `__bundler/template` value is a single JSON-encoded string on one line. When editing template HTML (markup, styles, title), the content must remain valid JSON — escape `"` as `\"`, `<\/script>` tags as `<\/script>`, and newlines as `\n`.
 - To change the browser tab title, update the `<title>` tag **inside the template string** (not the outer `<head>`), since the bundler replaces `documentElement` at runtime.
+- When re-encoding the template with Python's `json.dumps`, always append `.replace('</', '<\\/')` to the result — Python does not escape `/` by default, so `</script>` inside the template would break the outer HTML parser.
+
+## Responsive layout
+
+The app targets all screen sizes with CSS class overrides on four structural divs:
+
+| Class | Element | Breakpoint behaviour |
+|---|---|---|
+| `.krb-page` | Outermost wrapper | `padding:0` on ≤ 1280px |
+| `.krb-bezel` | Decorative frame | Hidden (transparent, no shadow) on ≤ 1280px |
+| `.krb-screen` | Fixed 1180×812 container | `100vw × 100dvh` on ≤ 1280px |
+| `.krb-kids` | Flex row of kid columns | Gap reduced; columns stay side-by-side at all widths |
+
+Media queries live in the second `<style>` block inside the template, appended after the `@keyframes tapRing` rule. All overrides use `!important` because the default styles are inline and would otherwise win.
