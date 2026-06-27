@@ -51,3 +51,13 @@ The app targets all screen sizes with CSS class overrides on four structural div
 | `.krb-kids` | Flex row of kid columns | Gap reduced; columns stay side-by-side at all widths |
 
 Media queries live in the second `<style>` block inside the template, appended after the `@keyframes tapRing` rule. All overrides use `!important` because the default styles are inline and would otherwise win.
+
+### Mobile layout (≤ 600px — e.g. iPhone 12 Pro at 390px wide)
+
+At `max-width: 600px` the layout switches to a single-column stacked view:
+
+- **`.krb-kids`**: `flex-direction: column; overflow-y: auto` — kids stack vertically and the container scrolls
+- **`.krb-kids > *`**: `flex: 0 0 auto; height: calc(100dvh - 88px); min-height: 360px` — each kid card fills most of the viewport so its internal task list (which already has `overflow: auto; flex: 1; min-height: 0`) retains a bounded, scrollable height
+- The `88px` offset accounts for the header row (≈55px) + top/bottom screen padding (18px) + margin-top (4px) + breathing room
+
+**Editing note:** to adjust the card height on mobile, change the `88px` value in the `calc(100dvh - 88px)` expression inside the `max-width:600px` media query in the template's second `<style>` block.
